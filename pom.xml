@@ -32,6 +32,12 @@
             <artifactId>JDA</artifactId>
             <version>5.0.0-beta.13</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.yahoofinance-api</groupId>
+            <artifactId>YahooFinanceAPI</artifactId>
+            <version>3.17.0</version>
+        </dependency>
     </dependencies>
 
 </project>
