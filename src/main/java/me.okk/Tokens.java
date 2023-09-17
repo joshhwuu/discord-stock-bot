@@ -1,22 +1,22 @@
 package me.okk;
 
-public class Hidden {
+public class Tokens {
     private static String api_key;
     private static String bot_token;
-    private static Hidden hidden;
+    private static Tokens hidden;
 
-    private Hidden() {
+    private Tokens() {
         api_key = System.getenv("api_key");
         bot_token = System.getenv("bot_token");
     }
 
     public static String getApi_key() {
-        hidden = new Hidden();
+        hidden = new Tokens();
         return api_key;
     }
 
     public static String getBot_token() {
-        hidden = new Hidden();
+        hidden = new Tokens();
         return bot_token;
     }
 }

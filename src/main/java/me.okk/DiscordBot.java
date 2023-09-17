@@ -26,13 +26,13 @@ public class DiscordBot extends ListenerAdapter {
 //        }
         // Creates JDA object bot, replace "token" with your token.
         Config cfg = Config.builder()
-                .key(Hidden.getApi_key())
+                .key(Tokens.getApi_key())
                 .timeOut(10)
                 .build();
 
         AlphaVantage.api().init(cfg);
 
-        JDA bot = JDABuilder.createDefault(Hidden.getBot_token())
+        JDA bot = JDABuilder.createDefault(Tokens.getBot_token())
                 .setActivity(Activity.playing("Type /ss + ticker symbol!"))
                 .addEventListeners(new DiscordBot())
                 .build();
