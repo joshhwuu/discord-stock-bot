@@ -6,8 +6,8 @@ public class Hidden {
     private static Hidden hidden;
 
     private Hidden() {
-        api_key = "4O40VJGL7N24KQKP";
-        bot_token = "MTE1MDE4MjYxNjc3NjA2NTE4NQ.GxbMQg.uUn-V6nvwZTzo6saR-JH17brDsEcylDnk6f0lE";
+        api_key = "key";
+        bot_token = "token";
     }
 
     public static String getApi_key() {
