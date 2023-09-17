@@ -36,3 +36,4 @@ build/
 
 ### Mac OS ###
 .DS_Store!/src/main/java/me.okk/config.java
+!/src/main/java/me.okk/Hidden.java
