@@ -19,11 +19,6 @@ import javax.security.auth.login.LoginException;
 public class DiscordBot extends ListenerAdapter {
 
     public static void main(String[] args) throws LoginException {
-
-//        if (args.length < 1) {
-//            System.out.println("You have to provide a token as first argument!");
-//            System.exit(1);
-//        }
         // Creates JDA object bot, replace "token" with your token.
         Config cfg = Config.builder()
                 .key(Tokens.getApi_key())
@@ -53,12 +48,14 @@ public class DiscordBot extends ListenerAdapter {
                         .forSymbol(symbol)
                         .outputSize(OutputSize.COMPACT)
                         .fetchSync();
-
                 String temp = response.toString();
-                System.out.println(temp);
-                String retString = temp.substring(temp.indexOf("[")+12, temp.indexOf("}", temp.indexOf("[")));
-
-                e.reply(formatString(retString, symbol)).queue();
+                String retString;
+                try {
+                    retString = formatString(temp, symbol);
+                } catch (StringIndexOutOfBoundsException event) {
+                    retString = "oopsy poopsy";
+                }
+                e.reply(retString).queue();
                 break;
         }
     }
@@ -67,16 +64,16 @@ public class DiscordBot extends ListenerAdapter {
         bot.updateCommands().addCommands(
                 Commands.slash("ss", "Search Stock")
                         .addOption(OptionType.STRING, "symbol", "Ticker symbol"),
-                Commands.slash("forex", "Search Forex")
+                Commands.slash("fx", "Search Forex")
                         .addOption(OptionType.STRING, "currency", "Currency"),
-                Commands.slash("exch", "Exchange Rate")
+                Commands.slash("ex", "Exchange Rate")
                         .addOption(OptionType.STRING, "currency", "Currency"),
-                Commands.slash("crypto", "Crypto")
+                Commands.slash("cr", "Crypto")
                         .addOption(OptionType.STRING, "name", "Name")
         ).queue();
     }
 
-    private String formatString(String out, String symbol) {
+    private String formatString(String out, String symbol) throws StringIndexOutOfBoundsException {
         java.util.Date date = new java.util.Date();
         String dateStr = String.valueOf(date);
         String retString = symbol.toUpperCase() + " - " + dateStr + "\n" + "------------------------------------";
