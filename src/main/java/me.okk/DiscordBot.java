@@ -53,9 +53,27 @@ public class DiscordBot extends ListenerAdapter {
                 try {
                     retString = formatString(temp, symbol);
                 } catch (StringIndexOutOfBoundsException event) {
-                    retString = "oopsy poopsy";
+                    retString = "Oops! We couldn't find that stock!";
                 }
                 e.reply(retString).queue();
+                break;
+            case "ssr":
+                String realTimeSymbol = e.getOption("symbol", OptionMapping::getAsString);
+                TimeSeriesResponse realTimeResponse = AlphaVantage.api()
+                        .timeSeries()
+                        .intraday()
+                        .interval(Interval.ONE_MIN)
+                        .forSymbol(realTimeSymbol)
+                        .outputSize(OutputSize.COMPACT)
+                        .fetchSync();
+                String rttemp = realTimeResponse.toString();
+                String rttRetString;
+                try {
+                    rttRetString = formatRealTime(rttemp, realTimeSymbol);
+                } catch (StringIndexOutOfBoundsException stringIndexOutOfBoundsException) {
+                    rttRetString = "Oops! We couldn't find that stock!";
+                }
+                e.reply(rttRetString).queue();
                 break;
         }
     }
@@ -63,6 +81,8 @@ public class DiscordBot extends ListenerAdapter {
     private static void setCommands(JDA bot) {
         bot.updateCommands().addCommands(
                 Commands.slash("ss", "Search Stock")
+                        .addOption(OptionType.STRING, "symbol", "Ticker symbol"),
+                Commands.slash("ssr", "Search Stock real-time")
                         .addOption(OptionType.STRING, "symbol", "Ticker symbol"),
                 Commands.slash("fx", "Search Forex")
                         .addOption(OptionType.STRING, "currency", "Currency"),
@@ -73,6 +93,7 @@ public class DiscordBot extends ListenerAdapter {
         ).queue();
     }
 
+    // Formats given string into symbol name, symbol open, high, low, and close as well as time of request
     private String formatString(String out, String symbol) throws StringIndexOutOfBoundsException {
         java.util.Date date = new java.util.Date();
         String dateStr = String.valueOf(date);
@@ -86,6 +107,15 @@ public class DiscordBot extends ListenerAdapter {
                 + high + "\n"
                 + low + "\n"
                 + close;
+    }
 
+    // Formats given string into symbol name and symbol price, as well as time of request
+    private String formatRealTime(String out, String symbol) throws StringIndexOutOfBoundsException {
+        java.util.Date date = new java.util.Date();
+        String dateStr = String.valueOf(date);
+        String retString = symbol.toUpperCase() + " - " + dateStr + "\n" + "------------------------------------";
+        String price = "Price: " + out.substring(out.indexOf("high=")+5, out.indexOf("low=")-2);
+        return retString + "\n"
+                + price;
     }
 }
